@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{% comment %} <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -6,8 +6,68 @@
     <title>Document</title>
 </head>
 <body>
-<h1>    Bella Vista  </h1>
+<h1 class='text-center'>    Bella Vista  </h1>
 <p class="undername">FINE DINING EXPERIENCE </p>
 <h2></h2>
+</body>
+</html> {% endcomment %}
+{% load static %}
+<header class="top">
+<h1>  Bella Vista </h1>
+<p class="undername">FINE DINING EXPERIENCE </p>
+<form method="get" class="filters" id="filterForm">
+<input type="text" name="q" placeholder="Taomni qidiring..." value="{{ q }}">
+
+
+<select name="category" onchange="this.form.submit()">
+<option value="">Barchasi</option>
+{% for cat in categories %}
+<option value="{{ cat }}" {% if cat == selected_category %}selected{% endif %}>{{ cat }}</option>
+{% endfor %}
+</select>
+
+
+<select name="avail" onchange="this.form.submit()">
+<option value="">Hammasi</option>
+<option value="1" {% if selected_avail == '1' %}selected{% endif %}>Mavjud</option>
+<option value="0" {% if selected_avail == '0' %}selected{% endif %}>Mavjud emas</option>
+</select>
+
+
+<button type="submit">Filtrlash</button>
+</form>
+</header>
+
+
+<main class="grid">
+{% if dishes.exists %}
+{% for dish in dishes %}
+<article class="card">
+<div class="thumb">
+{% if dish.image %}
+<img src="{{ dish.image.url }}" alt="{{ dish.name }}" loading="lazy">
+{% else %}
+<div class="no-image">Rasm yo'q</div>
+{% endif %}
+</div>
+<div class="info">
+<h3 class="name">{{ dish.name }}</h3>
+<p class="desc">{{ dish.description|default:"—" }}</p>
+<div class="meta">
+<span class="price">{{ dish.price }} so'm</span>
+<span class="avail {% if dish.available %}yes{% else %}no{% endif %}">
+{% if dish.available %}Mavjud{% else %}Mavjud emas{% endif %}
+</span>
+</div>
+</div>
+</article>
+{% endfor %}
+{% else %}
+<p class="empty">Hozircha taomlar yo'q.</p>
+{% endif %}
+</main>
+
+
+<script src="{% static 'menu/js/menu.js' %}"></script>
 </body>
 </html>
